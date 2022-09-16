@@ -21,6 +21,28 @@ Add these to the `package.json`:
 }
 ```
 
+## Add Eslint config with vscode
+- Create a folder named `.vscode` if not exists
+- Create a file named `settings.json` inside `.vscode` directory if not exists
+- Paste the following to the `settings.json` file:
+```
+"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+```
+If it is created newly, then:
+```
+{
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+}
+```
+
 ## Eslint Config file
 
 Create `.eslintrc.js` to the project root and add the following:
