@@ -8,6 +8,37 @@
 
 4. `timedatectl set-ntp true`
 
+### If `Wi-fi` is needed
+Wi-fi can be connected using `iwctl` utility tool. To connect to a wi-fi network:
+
+* Type `iwctl` and hit `ENTER`
+* To get wi-fi network adapter, type `device list` and hit `ENTER`
+* To scan for networks:
+  * Type `station device scan` and hit `ENTER`
+  * Type `station device get-networks` and hit `ENTER`
+* To connect, type `station device connect <SSID>` and hit `ENTER`
+  * Enter password and hit `ENTER`
+  * For more info, refer to the [ArchWiki](https://wiki.archlinux.org/title/Iwd#iwctl)
+
+### For Remote Installation using `ssh`
+In *Remote(Target)* machine:
+* Setup root password:
+  * Type `passwd` and hit `ENTER`
+  * Set root password
+* Get `ip address` by typing `ip a` and hit `Enter`
+
+![Ip Address](ip-address.png)  
+
+On *Local(Host)* machine:
+* Open Terminal and type `ssh root@<IP_ADDRESS>` and hit `ENTER`
+  * Enter the root password for the `target` machine.
+  * Start from `Pre-requisites
+
+## Automatically update mirror list with fastest mirrors
+* Run `reflector --sort rate -c <COUNTRY_NAME_1> -c <COUNTRY_NAME_2> --verbose --save /etc/pacman.d/mirrorlist`
+  * Example: `reflector --sort rate -c Bangladesh -c 'United Kingdom' --verbose --save /etc/pacman.d/mirrorlist`
+* Run `pacman -Syy` to refresh the repositories.
+
 ## Partitioning
 1. `cfdisk` Then select `gpt`
 2. Minimum 200 mb for `EFI` and rest is for `OS`
@@ -40,7 +71,8 @@
 1. `ln -sf /usr/share/zoneinfo/Asia/Dhaka /etc/localtime`
 2. `hwclock --systohc`
 3. `nano /etc/locale.gen`
-4. Uncomment `en_US.UTF-8` and save
+4. Run `locale-gen`
+5. Uncomment `en_US.UTF-8` and save
 
 ## Configuring host
 1. `nano /etc/hostname` then add a hostname and save
@@ -61,6 +93,11 @@
 7. `EDITOR=nano visudo`
 8. Uncomment `%wheel ALL=ALL` then save and exit
 
+## Configuring Network [IMPROVED! + Latest]
+> Arch has a much easier way to configure network than `dhcpcd` mentioned in the *LAN* section below. `networkmanager` package does it easily. This handles the wi-fi and lan pretty smoothly and provides a GUI interface too.
+
+To install it, run: `sudo pacman -Syy networkmanager`
+
 ## Bootloader installation
 1. `pacman -Syu grub efibootmgr`
 2. `grub-install --target=x86_64-efi --efi-directory=/efi/ --bootloader-id=Arch`
@@ -68,6 +105,12 @@
 4. `exit`
 5. `shutdown now`
 6. Remove installation medium
+
+### Enable NetworkManager
+* Run `sudo systemctl enable NetworkManager`
+* Run `sudo systemctl start NetworkManager`
+
+> Note: No need to configure *(DHCPCD) LAN* if *NetworkManager* is installed and configured. 
 
 ## Configuring network (LAN)
 1. `cd /etc/netctl`
