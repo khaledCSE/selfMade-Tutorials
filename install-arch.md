@@ -1,3 +1,4 @@
+![Arch Linux Logo](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png) 
 # Installing Arch Linux (Base)
 
 ## Setting up Prerequisites
@@ -27,7 +28,7 @@ In *Remote(Target)* machine:
   * Set root password
 * Get `ip address` by typing `ip a` and hit `Enter`
 
-![Ip Address](ip-address.png)  
+![Ip Address](images/ip-address.png)  
 
 On *Local(Host)* machine:
 * Open Terminal and type `ssh root@<IP_ADDRESS>` and hit `ENTER`
@@ -40,19 +41,40 @@ On *Local(Host)* machine:
 * Run `pacman -Syy` to refresh the repositories.
 
 ## Partitioning
-1. `cfdisk` Then select `gpt`
-2. Minimum 200 mb for `EFI` and rest is for `OS`
-3. Write changes and quit.
-4. `mkfs.ext4 /dev/sda2`
-5. `mkfs.fat -F32 /dev/sda1`
+Check the target drive using `lsblk`
+
+![Drive List](images/lsblk.png)
+
+> This case it is `/dev/sda1`
+
+* Run `cfdisk <DRIVE_LINK>`. My case: `cfdisk /dev/sda1`
+* Create 500 mb partition for *UEFI* with the type `EFI System`
+* Create `SWAP` partition\*
+* Create a new partition with all available space and leave the type as is.
+
+> Swap space should be twice the size of the RAM if RAM is lesser than 2 GB. If RAM size is more than 2 GB (i.e. 5GB of swap for 3GB of RAM), then swap space must be size of RAM + 2 GB.
+
+### Formatting the partitions
+Formatting can be done using either `ext4` or `btrfs`. Here we are using `ext4`
+
+* Run `mkfs.fat -F32 /dev/sda1`
+* Run `mkfs.ext4 /dev/sda2`
 
 ## Mounting Drives
 1. `mount /dev/sda2 /mnt`
 2. `mkdir /mnt/efi`
 3. `mount /dev/sda1 /mnt/efi`
 
+> For 
+<span style="color: aqua;">**Partitioning**</span>, 
+<span style="color: lightblue;">**Formatting**</span>, 
+<span style="color: deepskyblue;">**Mounting**</span> 
+drives, refer to the [Arch Linux BTRFS Manual](https://github.com/khaledCSE/selfMade-Tutorials/blob/main/arch-linux-btrfs.md)
+
 ## Install linux base and firmware
-1. `pacstrap /mnt base linux linux-firmware`
+1. `pacstrap /mnt base linux linux-firmware intel-ucode`
+
+> For AMD, it's `amd-ucode`
 
 ## Generate Filesystem
 1. `genfstab -U /mnt >> /mnt/etc/fstab`
