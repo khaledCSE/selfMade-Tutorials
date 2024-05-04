@@ -62,8 +62,8 @@ Formatting can be done using either `ext4` or `btrfs`. Here we are using `ext4`
 
 ## Mounting Drives
 1. `mount /dev/sda2 /mnt`
-2. `mkdir /mnt/efi`
-3. `mount /dev/sda1 /mnt/efi`
+2. `mkdir /mnt/boot`
+3. `mount /dev/sda1 /mnt/boot`
 
 > For 
 <span style="color: aqua;">**Partitioning**</span>, 
@@ -144,9 +144,21 @@ To install it, run: `sudo pacman -Syy networkmanager`
 7. `sudo systemctl start dhcpcd`
 
 # Installing GUI
-Two of my favorite Desktop environments are Cinnamon and Deepin
+Two of my favorite Desktop environments are Gnome, Cinnamon and Deepin
 ## Greeter and GUI
-1. `pacman -Syu lightdm deepin deepin-extra xterm`
+### Deepin
+Run `pacman -Syu lightdm deepin deepin-extra xterm`
+### Gnome
+Run `pacman -Syu gdm gnome gnome-extra chromium`
+
+
+## Adding Windows Boot Manager to GRUB (For Dual Boot Users)
+1. Install **OS Prober** by running `sudo pacman -S os-prober`
+2. Edit the GRUB Config by `sudo nano /etc/default/grub`
+    1. Change `GRUB_TIMEOUT=20`
+    2. Uncomment `GRUB_DISABLE_OS_PROBER=false`
+    3. Save the file
+3. Update GRUB: `sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # References
 1. [Arch Mirror List](https://archlinux.org/mirrorlist)
